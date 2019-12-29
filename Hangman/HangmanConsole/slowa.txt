@@ -1,3 +1,5 @@
-piec, dwa, trzy, kot
-piesek, kotek
+piec,dwa,trzy,kot
+piesek,kotek
 pingwin
+hau
+mial

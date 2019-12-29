@@ -16,12 +16,14 @@ int main()
 	vector<string> words = readWordsFromFile("slowa.txt");
 	string word = pickRandomWord(words);
 
-	cout << words[0] << endl;
-	cout << words[1] << endl;
-	cout << words[2] << endl;
-	cout << words[3] << endl;
+	for (int i = 0; i < words.size(); i++) 
+	{
+		cout << "index = " << i << " " << words[i] << endl;
+	}
 
-	cout << word;
+	//cout << words.size() << endl;
+
+	//cout << word;
 }
 
 
@@ -29,7 +31,7 @@ int main()
 vector<string> readWordsFromFile(string path) 
 {
 	ifstream fileStream(path);
-	string word;
+	string word, line;
 	vector<string> wordsList;
 
 	if (!fileStream.is_open()) 
@@ -37,14 +39,16 @@ vector<string> readWordsFromFile(string path)
 		cout << "Nie udalo otworzyc sie pliku." << endl;
 	}
 
-	else 
+	while (fileStream >> ws, getline(fileStream, line))
 	{
-		while (fileStream >> ws, getline(fileStream, word, ','))
+		stringstream ss(line);
+
+		while (getline(ss, word, ','))
 		{
 			wordsList.push_back(word);
 		}
-		fileStream.close();
 	}
+	fileStream.close();
 	
 	return wordsList;
 }
