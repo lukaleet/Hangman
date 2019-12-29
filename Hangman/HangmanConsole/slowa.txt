@@ -1,0 +1,3 @@
+piec, dwa, trzy, kot
+piesek, kotek
+pingwin
