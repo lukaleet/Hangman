@@ -9,6 +9,8 @@
 using namespace std;
 
 void game(string);
+bool isCharInside(string, char);
+string makeWordSecret(string);
 vector<string> readWordsFromFile(string);
 string pickRandomWord(vector<string>);
 
@@ -17,6 +19,7 @@ int main()
 	char input;
 	while (true) 
 	{
+		cout << "Witaj w grze w wisielca." << endl;
 		cout << "Chcesz zagrac? y/n" << endl;
 		cin >> input;
 		input = tolower(input);
@@ -26,12 +29,12 @@ int main()
 			string word = pickRandomWord(words);
 
 			//testowe printowanie
-			for (int i = 0; i < words.size(); i++)
-			{
-				cout << "index = " << i << " " << words[i] << endl;
-			}
+			//for (int i = 0; i < words.size(); i++)
+			//{
+			//	cout << "index = " << i << " " << words[i] << endl;
+			//}
 
-			cout << word << endl;
+			//cout << word << endl;
 			game(word);
 		}
 		else if (input == 'n') 
@@ -47,15 +50,11 @@ int main()
 
 void game(string randomWord) 
 {
-	string secretWord;
 	int guessCounter = randomWord.size();
 
 	cout << "Wylosowane slowo ma " << randomWord.size() << " liter" << endl;
 
-	for (int i = 0; i < randomWord.size(); i++) 
-	{
-		secretWord.push_back('*');
-	}
+	string secretWord = makeWordSecret(randomWord);
 
 	while(true) 
 	{
@@ -64,7 +63,6 @@ void game(string randomWord)
 			cout << "Wylosowanym slowem bylo: " << randomWord << "." << " Wygrales!" << endl;
 			break;
 		}
-
 		else if (guessCounter == 0) 
 		{
 			cout << "Wylosowanym slowem bylo: " << randomWord << "." << " Przegrales!" << endl;
@@ -79,16 +77,41 @@ void game(string randomWord)
 		{
 			break;
 		}
-		for (int i = 0; i < randomWord.size(); i++) 
+		if (isCharInside(randomWord, playerInput)) 
 		{
-			if (randomWord[i] == playerInput) 
+			for (int i = 0; i < randomWord.size(); i++)
 			{
-				secretWord[i] = playerInput;
-			}
+				if (randomWord[i] == playerInput)
+				{
+					secretWord[i] = playerInput;
+				}
+			}		
+		}
+		else 
+		{
+			guessCounter--;
 		}
 		cout << secretWord << endl;
-		guessCounter -= 1;
 	}
+}
+
+// funkcja boolowska sprawdzajaca czy litera jest w wylosowanym slowie
+bool isCharInside(string word, char character) 
+{
+	return word.find(character) != string::npos;
+}
+
+// funkcja zwracajaca stringa zlozonego z gwiazdek, o dlugosci wylosowanego slowa
+string makeWordSecret(string randomWord) 
+{
+	string secretWord;
+
+	for (int i = 0; i < randomWord.size(); i++) 
+	{
+		secretWord.push_back('*');
+	}
+
+	return secretWord;
 }
 
 // funkcja wczytujaca wyrazy z pliku linijka po linijce slowo po slowie; zwraca liste slow
