@@ -9,6 +9,7 @@
 using namespace std;
 
 void game(string);
+string changeLetters(string, string, char);
 bool isCharInside(string, char);
 string makeWordSecret(string);
 vector<string> readWordsFromFile(string);
@@ -79,13 +80,7 @@ void game(string randomWord)
 		}
 		if (isCharInside(randomWord, playerInput)) 
 		{
-			for (int i = 0; i < randomWord.size(); i++)
-			{
-				if (randomWord[i] == playerInput)
-				{
-					secretWord[i] = playerInput;
-				}
-			}		
+			secretWord = changeLetters(randomWord, secretWord, playerInput);
 		}
 		else 
 		{
@@ -93,6 +88,26 @@ void game(string randomWord)
 		}
 		cout << secretWord << endl;
 	}
+}
+
+void printHangman(int guessCounter) 
+{
+
+}
+
+
+// funkcja zmieniajaca gwiazdki w stringu na input gracza
+string changeLetters(string randomWord, string secretWord, char playerInput) 
+{
+	for (int i = 0; i < randomWord.size(); i++) 
+	{
+		if (randomWord[i] == playerInput) 
+		{
+			secretWord[i] = playerInput;
+		}
+	}
+
+	return secretWord;
 }
 
 // funkcja boolowska sprawdzajaca czy litera jest w wylosowanym slowie
