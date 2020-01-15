@@ -1,5 +1,5 @@
-Piec,Dwa,Trzy,Kot
-Piesek,Kotek
-Pingwin
-Hau
+Piec,Dwa,Trzy,Kot,informatyk,kubek,komputer
+Piesek,Kotek,telewizor,
+Pingwin,klawiatura,Kompesor,Termos
+Hau,Zgrzyt,torebka
 Mial

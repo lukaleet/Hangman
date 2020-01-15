@@ -9,8 +9,9 @@
 using namespace std;
 
 void game(string);
-string changeLetters(string, string, char);
-bool isCharInside(string, char);
+void printHangman(int guessCounter);
+string changeLetters(string, string, string);
+bool isCharInside(string, string);
 string makeWordSecret(string);
 vector<string> readWordsFromFile(string);
 string pickRandomWord(vector<string>);
@@ -18,24 +19,18 @@ string pickRandomWord(vector<string>);
 int main()
 {
 	char input;
+	cout << "Witaj w grze w wisielca." << endl;
 	while (true) 
 	{
-		cout << "Witaj w grze w wisielca." << endl;
 		cout << "Chcesz zagrac? y/n" << endl;
 		cin >> input;
 		input = tolower(input);
 		if (input == 'y')
 		{
+			system("cls");
 			vector<string> words = readWordsFromFile("slowa.txt");
 			string word = pickRandomWord(words);
 
-			//testowe printowanie
-			//for (int i = 0; i < words.size(); i++)
-			//{
-			//	cout << "index = " << i << " " << words[i] << endl;
-			//}
-
-			//cout << word << endl;
 			game(word);
 		}
 		else if (input == 'n') 
@@ -51,9 +46,11 @@ int main()
 
 void game(string randomWord) 
 {
-	int guessCounter = randomWord.size();
+	int guessCounter = 0;
+	int amountOfGuesses = 6;
 
 	cout << "Wylosowane slowo ma " << randomWord.size() << " liter" << endl;
+	cout << "(Jesli chcesz opusic trwajaca gre wpisz 'q')" << endl;
 
 	string secretWord = makeWordSecret(randomWord);
 
@@ -64,18 +61,21 @@ void game(string randomWord)
 			cout << "Wylosowanym slowem bylo: " << randomWord << "." << " Wygrales!" << endl;
 			break;
 		}
-		else if (guessCounter == 0) 
+		else if (guessCounter == 6) 
 		{
 			cout << "Wylosowanym slowem bylo: " << randomWord << "." << " Przegrales!" << endl;
 			break;
 		}
 
-		cout << "Zostalo Ci " << guessCounter << " prob" << endl;
-		char playerInput;
+		cout << "Zostalo Ci " << amountOfGuesses << " prob" << endl;
+		string playerInput;
 		cin >> playerInput;
-		playerInput = tolower(playerInput);
-		if (playerInput == 'q')
+
+		// input na male litery
+		transform(playerInput.begin(), playerInput.end(), playerInput.begin(), ::tolower);
+		if (playerInput == "q")
 		{
+			system("cls");
 			break;
 		}
 		if (isCharInside(randomWord, playerInput)) 
@@ -84,26 +84,99 @@ void game(string randomWord)
 		}
 		else 
 		{
-			guessCounter--;
+			amountOfGuesses--;
+			guessCounter++;
+			printHangman(guessCounter);
 		}
 		cout << secretWord << endl;
 	}
 }
 
-void printHangman(int guessCounter) 
+void printHangman(int guessCounter)
 {
+	{
+		switch (guessCounter)
+		{
+		case 6:
+			cout << endl << endl
+				<< "   +----+     " << endl
+				<< "   |    |     " << endl
+				<< "   |    O     " << endl
+				<< "   |   /|\\   " << endl
+				<< "   |   / \\   " << endl
+				<< "   |Przegrales " << endl
+				<< "  ============" << endl << endl;
+			break;
 
+		case 5:
+			cout << endl << endl
+				<< "   +----+  " << endl
+				<< "   |    |  " << endl
+				<< "   |    O  " << endl
+				<< "   |   /|\\ " << endl
+				<< "   |     \\ " << endl
+				<< "   |       " << endl
+				<< "  ============" << endl << endl;
+			break;
+
+		case 4:
+			cout << endl << endl
+				<< "   +----+  " << endl
+				<< "   |    |  " << endl
+				<< "   |    O  " << endl
+				<< "   |   /|\\ " << endl
+				<< "   |       " << endl
+				<< "   |       " << endl
+				<< "  =============" << endl << endl;
+			break;
+
+		case 3:
+			cout << endl << endl
+				<< "   +----+  " << endl
+				<< "   |    |  " << endl
+				<< "   |    O  " << endl
+				<< "   |   /|  " << endl
+				<< "   |       " << endl
+				<< "   |       " << endl
+				<< "  =============" << endl << endl;
+			break;
+
+		case 2:
+			cout << endl << endl
+				<< "   +----+  " << endl
+				<< "   |    |  " << endl
+				<< "   |    O  " << endl
+				<< "   |    |  " << endl
+				<< "   |       " << endl
+				<< "   |       " << endl
+				<< "  =============" << endl << endl;
+			break;
+
+		case 1:
+			cout << endl << endl
+				<< "   +----+  " << endl
+				<< "   |    |  " << endl
+				<< "   |       " << endl
+				<< "   |       " << endl
+				<< "   |       " << endl
+				<< "   |       " << endl
+				<< "  =============" << endl << endl;
+			break;
+		}
+	}
 }
 
-
 // funkcja zmieniajaca gwiazdki w stringu na input gracza
-string changeLetters(string randomWord, string secretWord, char playerInput) 
+string changeLetters(string randomWord, string secretWord, string playerInput) 
 {
 	for (int i = 0; i < randomWord.size(); i++) 
 	{
-		if (randomWord[i] == playerInput) 
+		for (int j = 0; j < playerInput.size(); j++) 
 		{
-			secretWord[i] = playerInput;
+			if (randomWord[i] == playerInput[j])
+			{
+				secretWord[i] = playerInput[j];
+			}
 		}
 	}
 
@@ -111,7 +184,7 @@ string changeLetters(string randomWord, string secretWord, char playerInput)
 }
 
 // funkcja boolowska sprawdzajaca czy litera jest w wylosowanym slowie
-bool isCharInside(string word, char character) 
+bool isCharInside(string word, string character) 
 {
 	return word.find(character) != string::npos;
 }
